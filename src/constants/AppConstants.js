@@ -1,0 +1,10 @@
+'use strict';
+
+var AppConstants = {
+	GET_ORIGINAL_SOURCE: 'GET_ORIGINAL_SOURCE',
+	UPDATE_SOURCE_MAP_URL: 'UPDATE_SOURCE_MAP_URL',
+	UPDATE_LINE: 'UPDATE_LINE',
+	UPDATE_COLUMN: 'UPDATE_COLUMN'
+};
+
+module.exports = AppConstants;
