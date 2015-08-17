@@ -4,19 +4,19 @@ var AppDispatcher = require('../dispatcher/AppDispatcher');
 var AppConstants = require('../constants/AppConstants');
 
 var AppActions = {
-	getOriginalSource: function(sourceMapUrl, line, column) {
+	getOriginalSource: function(sourceMap, line, column) {
 		AppDispatcher.dispatch({
 			actionType: AppConstants.GET_ORIGINAL_SOURCE,
-			sourceMapUrl: sourceMapUrl,
+			sourceMap: sourceMap,
 			line: line,
 			column: column
 		});
 	},
 
-	updateSourceMapUrl: function(sourceMapUrl) {
+	updateSourceMap: function(sourceMap) {
 		AppDispatcher.dispatch({
 			actionType: AppConstants.UPDATE_SOURCE_MAP_URL,
-			sourceMapUrl: sourceMapUrl
+			sourceMap: sourceMap
 		});
 	},
 
