@@ -3,6 +3,7 @@
 var React = require('react/addons');
 var AppStore = require('../stores/AppStore');
 var AppActions = require('../actions/AppActions');
+var _ = require('underscore/underscore');
 
 // CSS
 require('bootstrap/dist/css/bootstrap.css');
@@ -13,7 +14,6 @@ require('../styles/main.css');
  */
 function getInitialState() {
 	return {
-		defaultSourceMapsUrls: AppStore.getDefaultSourceMapsUrls(),
 		sourceMapUrl: AppStore.getSourceMapUrl(),
 		line: AppStore.getLine(),
 		column: AppStore.getColumn(),
@@ -31,8 +31,18 @@ var MinifierDebuggerToolApp = React.createClass({
 	componentWillUnmount: function() {
 		AppStore.removeChangeListener(this._onChange);
 	},
+
+	_isManualSourceMapUrl: function() {
+		var sourceMapUrl = AppStore.getSourceMapUrl();
+		var defaultSourceMapsUrls = AppStore.getDefaultSourceMapsUrls();
+		var isManualSourceMapUrl = _.chain(defaultSourceMapsUrls)
+			.pluck('url')
+			.contains(sourceMapUrl)
+			.value();
+		return isManualSourceMapUrl === false;
+	},
 	/**
-	 * Event handler for 'change' events coming from the TodoStore
+	 * Event handler htmlFor 'change' events coming from the TodoStore
 	 */
 	_onChange: function() {
 		this.setState(getInitialState());
@@ -51,42 +61,48 @@ var MinifierDebuggerToolApp = React.createClass({
 		AppActions.getOriginalSource(this.state.sourceMapUrl, this.state.line, this.state.column);
 	},
 	render: function() {
-		var that = this;
-		var radios = this.state.defaultSourceMapsUrls.map(function(item, i) {
+		var radios = AppStore.getDefaultSourceMapsUrls().map(_.bind(function(item, i) {
 			return (
-				<div className="radio">
+				<div className="radio" key={i}>
 					<label>
-						<input type="radio" name="sourceMapUrl" id={"sourceMapUrl" +i}
+						<input type="radio" name="sourceMapUrl" id={'sourceMapUrl' + i}
 							   value={item.url}
-							   checked={that.state.sourceMapUrl === item.url}
-							   onChange={that._onChangeSourceMapUrl}/> {item.title}
+							   checked={this.state.sourceMapUrl == item.url}
+							   onChange={this._onChangeSourceMapUrl}/> {item.title}
 					</label>
 				</div>
-			)
-		});
-		var sourceMapUrlInput = this.state.sourceMapUrl === ""
-			? (<input id="sourcemap" type="text" value={this.state.sourceMapUrl}
-					  onChange={this._onChangeSourceMapUrl}
-					  className="form-control"/>)
-			: null;
+			);
+		}, this));
+
 		return (
 			<div className="container">
 				<div className="row">
 					<div className="col-sm-6">
 						<form>
 							<div className="form-group">
-								<label for="sourceMapUrl0">Source Map url</label>
+								<label htmlFor="sourceMapUrl0">Source Map url</label>
 								{radios}
-								{sourceMapUrlInput}
+								<div className="radio">
+									<label>
+										<input type="radio" name="sourceMapUrl" id="sourceMapUrlManual" value=""
+											   checked={this._isManualSourceMapUrl()}
+											   onChange={this._onChangeSourceMapUrl}/>
+
+										<input id="sourcemap" type="text" value={this.state.sourceMapUrl}
+											   onChange={this._onChangeSourceMapUrl}
+											   disabled={!this._isManualSourceMapUrl()}
+											   className="form-control"/>
+									</label>
+								</div>
 							</div>
 							<div className="form-group">
-								<label for="line">Line</label>
+								<label htmlFor="line">Line</label>
 								<input id="line" type="number" value={this.state.line}
 									   onChange={this._onChangeLine}
 									   className="form-control"/>
 							</div>
 							<div className="form-group">
-								<label for="column">Column</label>
+								<label htmlFor="column">Column</label>
 								<input id="column" type="number" value={this.state.column}
 									   onChange={this._onChangeColumn} className="form-control"/>
 							</div>

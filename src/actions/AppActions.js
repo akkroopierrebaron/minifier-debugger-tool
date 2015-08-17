@@ -1,3 +1,5 @@
+'use strict';
+
 var AppDispatcher = require('../dispatcher/AppDispatcher');
 var AppConstants = require('../constants/AppConstants');
 
@@ -30,7 +32,7 @@ var AppActions = {
 			actionType: AppConstants.UPDATE_COLUMN,
 			column: column
 		});
-	},
+	}
 };
 
 module.exports = AppActions;

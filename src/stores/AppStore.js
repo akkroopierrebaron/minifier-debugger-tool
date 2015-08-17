@@ -1,3 +1,5 @@
+'use strict';
+
 var AppDispatcher = require('../dispatcher/AppDispatcher');
 var EventEmitter = require('events').EventEmitter;
 var AppConstants = require('../constants/AppConstants');
@@ -9,26 +11,26 @@ var CHANGE_EVENT = 'change';
 
 var _defaultSourceMapsUrls = [
 	{
-		url: 'http://www.google.com',
-		title: 'http://www.google.com'
+		url: 'https://akkroo.com/app/abcdefghijkl/resources/js/minified/base.min.js',
+		title: 'base.min.js (Production)'
 	},
 	{
-		url: 'http://www.twitter.com',
-		title: 'http://www.twitter.com'
+		url: 'https://akkroo.com/app/abcdefghijkl/resources/js/minified/collections.min.js',
+		title: 'collections.min.js (Production)'
 	},
 	{
-		url: 'http://www.apple.com',
-		title: 'http://www.apple.com'
+		url: 'https://akkroo.com/app/abcdefghijkl/resources/js/minified/models.min.js',
+		title: 'models.min.js (Production)'
 	},
 	{
-		url: '',
-		title: 'Enter a url'
+		url: 'https://akkroo.com/app/abcdefghijkl/resources/js/minified/views.min.js',
+		title: 'views.min.js (Production)'
 	}
 ];
 
 var _line = 0;
 var _column = 0;
-var _sourceMapUrl = '';
+var _sourceMapUrl = _defaultSourceMapsUrls[0].url;
 var _originalSource = {};
 
 function _parseSourceMap(sourceMapUrl) {
@@ -119,20 +121,17 @@ AppDispatcher.register(function(action) {
 			break;
 
 		case AppConstants.UPDATE_SOURCE_MAP_URL:
-			var sourceMapUrl = action.sourceMapUrl;
-			_sourceMapUrl = sourceMapUrl;
+			_sourceMapUrl = action.sourceMapUrl;
 			AppStore.emitChange();
 			break;
 
 		case AppConstants.UPDATE_LINE:
-			var line = action.line;
-			_line = line;
+			_line = action.line;
 			AppStore.emitChange();
 			break;
 
 		case AppConstants.UPDATE_COLUMN:
-			var column = action.column;
-			_column = column;
+			_column = action.column;
 			AppStore.emitChange();
 			break;
 		default:
